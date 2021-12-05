@@ -9,12 +9,12 @@ public class App {
         System.out.println("What number? ");
         System.out.print("Enter max number: ");
         int range = scanner.nextInt();
-        int randomNumber = (int) (Math.random() * range);
-        playLevel(range, randomNumber);
+        playLevel(range);
         scanner.close();
     }
 
-    private static void playLevel(int range, int number) {
+    private static void playLevel(int range) {
+        int number = (int) (Math.random() * range);
         while (true) {
             System.out.println("Enter number from 0 to " + range);
             int x = scanner.nextInt();
