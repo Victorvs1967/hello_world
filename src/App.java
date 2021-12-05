@@ -1,26 +1,31 @@
 import java.util.Scanner;
 
 public class App {
+
+    final static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) throws Exception {
 
-        Scanner scanner = new Scanner(System.in);
         System.out.println("What number? ");
-        int range = 10;
-        int number = (int) (Math.random() * range);
+        System.out.print("Enter max number: ");
+        int range = scanner.nextInt();
+        int randomNumber = (int) (Math.random() * range);
+        playLevel(range, randomNumber);
+        scanner.close();
+    }
 
+    private static void playLevel(int range, int number) {
         while (true) {
-            
             System.out.println("Enter number from 0 to " + range);
             int x = scanner.nextInt();
             if (x == number) {
                 System.out.println("Your number right!");
                 break;
             } else if (x < number) {
-                System.out.println(x + " is wrong. Number is smaller.");
+                System.out.println(x + " is wrong. Your number is smaller.");
             } else {
-                System.out.println(x + " is wrong. Number is bigger.");
+                System.out.println(x + " is wrong. Your number is bigger.");
             }
         }
-        scanner.close();
     }
 }
