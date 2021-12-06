@@ -1,6 +1,9 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class GameWindow extends JFrame {
@@ -11,8 +14,9 @@ public class GameWindow extends JFrame {
     private static Image gameOver;
     private static Image drop;
     private static float dropLeft = 200;
-    private static float dropDown = -100;
-    private static float dropV = 200;
+    private static float dropTop = -100;
+    private static float dropV = 100;
+    private static int score = 0;
 
     public static void main(String[] args) throws IOException {
         background = ImageIO.read(GameWindow.class.getResourceAsStream("background.png"));
@@ -26,6 +30,23 @@ public class GameWindow extends JFrame {
         gameWindow.setResizable(false);
         lastFrameTime = System.nanoTime();
         GameField gameField = new GameField();
+        gameField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int x = e.getX();
+                int y = e.getY();
+                float dropRight = dropLeft + drop.getWidth(null);
+                float dropBottom = dropTop + drop.getHeight(null);
+                boolean isDrop = x >= dropLeft && x <= dropRight && y >= dropTop && y <= dropBottom;
+                if (isDrop) {
+                    dropTop = -100;
+                    dropLeft = (int) (Math.random() * (gameField.getWidth() - drop.getWidth(null)));
+                    dropV = dropV + 20;
+                    score += 1;
+                    gameWindow.setTitle("Score: " + score);
+                };
+            }
+        });
         gameWindow.add(gameField);
         gameWindow.setVisible(true);
     }
@@ -35,10 +56,10 @@ public class GameWindow extends JFrame {
         float deltaTime = (currentTime - lastFrameTime) * 0.000000001f;
         lastFrameTime = currentTime;
         g.drawImage(background, 0, 0, null);
-        dropLeft = dropLeft + dropV * deltaTime;
-        dropDown = dropDown + dropV * deltaTime;
-        g.drawImage(drop, (int) dropLeft, (int) dropDown, null);
-        // g.drawImage(gameOver, 290, 120, null);
+        dropTop = dropTop + dropV * deltaTime;
+        g.drawImage(drop, (int) dropLeft, (int) dropTop, null);
+
+        if (dropTop > gameWindow.getHeight()) g.drawImage(gameOver, 290, 120, null);
     }
 
     private static class GameField extends JPanel {
